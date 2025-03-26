@@ -141,3 +141,29 @@ document.addEventListener('click', (e) => {
   z-index: 1000;
   max-width: 80%;
 }
+// 添加到 script.js
+function startQuiz() {
+  const questions = [
+    { q: "when was us first video call？", a: "2024-12-24" },
+    { q: "what is my favorite color？", a: "blue" }
+  ];
+  
+  let score = 0;
+  questions.forEach((item, i) => {
+    const answer = prompt(`Question ${i+1}: ${item.q}`);
+    if (answer?.toLowerCase() === item.a.toLowerCase()) {
+      score++;
+      alert("Correct！");
+    } else {
+      alert(`Answer is: ${item.a}`);
+    }
+  });
+  
+  alert(`The result of the compatibility test is: ${score}/${questions.length}\n${ 
+    score === questions.length ? "We are born to be together！" : "Need to know me better my love, love u anyway tho~"
+  }`);
+}
+
+// 提示彩蛋存在（添加到页面某个角落）
+console.log("%c💡 enter startQuiz() Test our compatibility！", 
+  "color: #ff6b8b; font-size: 16px;");
