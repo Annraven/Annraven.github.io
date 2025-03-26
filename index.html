@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Days With You | Ann & Pennsylvania</title>
+    <!-- 引入CSS和JS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入Leaflet地图库 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>100 Days of Long-Distance Love</h1>
+        
+        <!-- 倒计时模块 -->
+        <div id="countdown">
+            <p>Our anniversary countdown:</p >
+            <div class="timer">
+                <span id="days"></span>天
+                <span id="hours"></span>小时
+                <span id="minutes"></span>分
+                <span id="seconds"></span>秒
+            </div>
+        </div>
+
+        <!-- 地图容器 -->
+        <div id="map"></div>
+
+        <!-- 情话展示区 -->
+        <div id="love-message"></div>
+    </div>
+
+    <!-- 引入自定义JS -->
+    <script src="script.js"></script>
+</body>
+</html>
