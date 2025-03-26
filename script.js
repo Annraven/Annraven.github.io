@@ -1,0 +1,74 @@
+// 1. 初始化地图
+const map = L.map('map').setView([39.8283, -98.5795], 3); // 默认居中美国
+
+// 使用OpenStreetMap底图
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+// 2. 标记两地
+const yourCity = L.marker([23.1571, 113.2734]).addTo(map) // 广州白云区
+    .bindPopup("<b>广州</b><br>我在这里等你").openPopup();
+
+const hisCity = L.marker([40.9696, -75.9273]).addTo(map) // 宾夕法尼亚
+    .bindPopup("<b>Pennsylvania</b><br>你的城市");
+
+// 3. 画一条连接线
+const line = L.polyline(
+    [[23.1571, 113.2734], [40.9696, -75.9273]],
+    {color: 'red', dashArray: '10, 10'}
+).addTo(map);
+
+// 4. 自动缩放地图以显示所有标记
+map.fitBounds([
+    [23.1571, 113.2734],
+    [40.9696, -75.9273]
+]);
+
+// 5. 倒计时功能
+const countdownDate = new Date("2025-03-28").getTime();
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("days").innerHTML = days;
+    document.getElementById("hours").innerHTML = hours;
+    document.getElementById("minutes").innerHTML = minutes;
+    document.getElementById("seconds").innerHTML = seconds;
+}
+
+setInterval(updateCountdown, 1000);
+
+// 6. 情话和爱心特效
+const messages = [
+    "从广州到宾夕法尼亚，爱没有距离",
+    "Every night, I count the stars until we meet",
+    "下次见面，我要把100天的思念都给你"
+];
+
+document.addEventListener("mousemove", function(e) {
+    // 创建漂浮爱心
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = e.pageX + "px";
+    heart.style.top = e.pageY + "px";
+    document.body.appendChild(heart);
+    
+    // 3秒后移除爱心
+    setTimeout(() => {
+        heart.remove();
+    }, 3000);
+    
+    // 随机显示情话
+    if (Math.random() > 0.95) {
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        document.getElementById("love-message").textContent = randomMsg;
+    }
+});
