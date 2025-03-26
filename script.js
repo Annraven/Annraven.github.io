@@ -95,20 +95,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* 添加到 style.css */
-.firework {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: explode 1s ease-out;
-}
 
-@keyframes explode {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(20); opacity: 0; }
-}
 // 添加到 script.js
 let clickCount = 0;
 document.addEventListener('click', (e) => {
