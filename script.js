@@ -109,3 +109,35 @@ document.addEventListener('keydown', (e) => {
   0% { transform: scale(1); opacity: 1; }
   100% { transform: scale(20); opacity: 0; }
 }
+// 添加到 script.js
+let clickCount = 0;
+document.addEventListener('click', (e) => {
+  if (e.clientX < 50 && e.clientY < 50) { // 左上角点击
+    clickCount++;
+    if (clickCount === 5) {
+      const letter = document.createElement('div');
+      letter.className = 'love-letter';
+      letter.innerHTML = `
+        <h3>To My Love in Pennsylvania:</h3>
+        <p>${messages.join('<br>')}</p >
+        <button onclick="this.parentElement.remove()">❤️ Close</button>
+      `;
+      document.body.appendChild(letter);
+      clickCount = 0;
+    }
+  }
+});
+
+/* 添加到 style.css */
+.love-letter {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  z-index: 1000;
+  max-width: 80%;
+}
