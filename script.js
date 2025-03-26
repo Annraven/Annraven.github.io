@@ -167,3 +167,10 @@ function startQuiz() {
 // 提示彩蛋存在（添加到页面某个角落）
 console.log("%c💡 enter startQuiz() Test our compatibility！", 
   "color: #ff6b8b; font-size: 16px;");
+// 修改 script.js 中的地图标记代码
+hisCity.on('click', () => {
+  const answer = prompt("enter my birthday（MMDD）unlock secret:");
+  if (answer === "1120") { // 替换为真实日期
+    hisCity.setPopupContent("<b>Surprise！</b><br>When the time we met, I'll give u a lot kisses, and we'll have a road trip, yay!❤️").openPopup();
+  }
+});
