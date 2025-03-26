@@ -47,7 +47,7 @@ setInterval(updateCountdown, 1000);
 
 // 6. 情话和爱心特效
 const messages = [
-    "从广州到宾夕法尼亚，爱没有距离",
+    "From Guangzhou to Pennsylvania, love has no distance",
     "Every night, I count the stars until we meet",
     "下次见面，我要把100天的思念都给你"
 ];
@@ -72,3 +72,40 @@ document.addEventListener("mousemove", function(e) {
         document.getElementById("love-message").textContent = randomMsg;
     }
 });
+// 添加到 script.js 末尾
+document.addEventListener('keydown', (e) => {
+  const secretCode = '20250328';
+  let input = '';
+  
+  input += e.key;
+  if (input === secretCode) {
+    // 创建烟花效果
+    for (let i = 0; i < 100; i++) {
+      setTimeout(() => {
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        firework.style.left = Math.random() * 100 + 'vw';
+        firework.style.top = Math.random() * 100 + 'vh';
+        firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        document.body.appendChild(firework);
+        
+        setTimeout(() => firework.remove(), 1000);
+      }, i * 30);
+    }
+  }
+});
+
+/* 添加到 style.css */
+.firework {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: explode 1s ease-out;
+}
+
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(20); opacity: 0; }
+}
