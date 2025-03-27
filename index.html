@@ -87,3 +87,289 @@
   setInterval(createMeteor, 500);
 </script>
 <a href="/cat-memory-game" class="btn">Cat Memory Game</a>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>timeline</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            touch-action: pan-y;
+        }
+        
+        .timeline-container {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px; /* 为导航按钮留出空间 */
+        }
+        
+        .swipe-container {
+            width: 100%;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .timeline {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+        }
+        
+        .timeline-item {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        
+        .timeline-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        
+        .timeline-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: #f8f9fa;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            border: none;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            opacity: 0.6;
+        }
+        
+        .page-indicator {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* 触摸反馈效果 */
+        .nav-btn:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+        
+        /* 滑动指示器 */
+        .swipe-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        
+        .swipe-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .swipe-dot.active {
+            background: #3498db;
+        }
+        
+        @media (min-width: 768px) {
+            .timeline-content {
+                max-width: 70%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline-container">
+        <div class="swipe-container" id="swipe-container">
+            <div class="timeline" id="timeline">
+                <!-- 封面 -->
+                <section class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Love</h3>
+                        <p>Our 100 days, Damien and Fanghui</p >
+                        < img src="cover.jpg" width="100%" style="border-radius: 8px; margin-top: 15px;">
+                    </div>
+                </section>
+                
+                <!-- 冒险游戏 -->
+                <section class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Adventure</h3>
+                        <p>Click to see</p >
+                        <button class="demo-btn" style="margin-top: 15px; padding: 10px 20px; background: #2ecc71; color: white; border: none; border-radius: 25px;">Play</button>
+                    </div>
+                </section>
+                
+                <!-- 时间胶囊 -->
+                <section class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Time-Capsule</h3>
+                        <p>To future us</p >
+                        <textarea placeholder="Guess what would happen in the future..." style="width: 100%; height: 100px; margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"></textarea>
+                    </div>
+                </section>
+                
+                <!-- 猫咪游戏 -->
+                <section class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Cat game!</h3>
+                        <div style="width: 100%; height: 150px; background: #f1c40f; border-radius: 8px; margin: 15px 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            Cat game, Let's play!
+                        </div>
+                        <button class="start-game" style="width: 100%; padding: 12px; background: #e74c3c; color: white; border: none; border-radius: 25px; font-size: 16px;">Start Game</button>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="swipe-hint" id="swipe-hint">
+                <div class="swipe-dot active"></div>
+                <div class="swipe-dot"></div>
+                <div class="swipe-dot"></div>
+                <div class="swipe-dot"></div>
+            </div>
+        </div>
+        
+        <div class="timeline-nav">
+            <button id="prev-btn" class="nav-btn" disabled>←</button>
+            <div class="page-indicator">
+                <span id="page-current">1</span>
+                <span>/</span>
+                <span id="page-total">4</span>
+            </div>
+            <button id="next-btn" class="nav-btn">→</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeline = document.getElementById('timeline');
+            const swipeContainer = document.getElementById('swipe-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageCurrent = document.getElementById('page-current');
+            const pageTotal = document.getElementById('page-total');
+            const swipeDots = document.querySelectorAll('.swipe-dot');
+            
+            const itemCount = document.querySelectorAll('.timeline-item').length;
+            let currentIndex = 0;
+            let startX = 0;
+            let isDragging = false;
+            let touchStartTime = 0;
+            
+            pageTotal.textContent = itemCount;
+            
+            // 更新显示状态
+            function updateDisplay() {
+                const offset = -currentIndex * 100;
+                timeline.style.transform = `translateX(${offset}%)`;
+                
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === itemCount - 1;
+                pageCurrent.textContent = currentIndex + 1;
+                
+                // 更新指示点
+                swipeDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+            
+            // 切换页面
+            function goToIndex(index) {
+                if (index >= 0 && index < itemCount) {
+                    currentIndex = index;
+                    updateDisplay();
+                }
+            }
+            
+            // 按钮事件
+            nextBtn.addEventListener('click', () => goToIndex(currentIndex + 1));
+            prevBtn.addEventListener('click', () => goToIndex(currentIndex - 1));
+            
+            // 触摸事件
+            swipeContainer.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                touchStartTime = Date.now();
+                isDragging = true;
+                timeline.style.transition = 'none';
+            }, { passive: true });
+            
+            swipeContainer.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const x = e.touches[0].clientX;
+                const diff = x - startX;
+                
+                // 阻止垂直滚动干扰
+                if (Math.abs(diff) > 10) {
+                    e.preventDefault();
+                }
+                
+                const offset = -currentIndex * 100 + (diff / window.innerWidth) * 100;
+                timeline.style.transform = `translateX(${offset}%)`;
+            }, { passive: false });
+            
+            swipeContainer.addEventListener('touchend', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                timeline.style.transition = 'transform 0.3s ease-out';
+                
+                const endX = e.changedTouches[0].clientX;
+                const diff = endX - startX;
+                const timeDiff = Date.now() - touchStartTime;
+                const velocity = Math.abs(diff) / timeDiff;
+                
+                // 判断滑动方向和力度
+                if (Math.abs(diff) > 50 || velocity > 0.3) {
+                    if (diff < 0) {
+                        // 向左滑动 - 下一页
+                        goToIndex(Math.min(currentIndex + 1, itemCount - 1));
+                    } else {
+                        // 向右滑动 - 上一页
+                        goToIndex(Math.max(currentIndex - 1, 0));
+                    }
+                } else
