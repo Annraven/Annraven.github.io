@@ -204,3 +204,10 @@ if ('DeviceMotionEvent' in window) {
     }
   });
 }
+// 摇一摇跳转到随机页面
+window.addEventListener('devicemotion', (e) => {
+    if (Math.abs(e.acceleration.x) > 15) {
+        const pages = ['/', '/adventure', '/time-capsule'];
+        window.location = pages[Math.floor(Math.random() * 3)];
+    }
+});
