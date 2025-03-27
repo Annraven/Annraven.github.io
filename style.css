@@ -83,3 +83,22 @@ h1 {
   z-index: 1000;
   max-width: 80%;
 }
+/* === 手机触控优化（不影响原有样式）=== */
+@media (hover: none) {
+  /* 扩大触控区域 */
+  button, .marker {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  /* 情书触发区提示 */
+  body::after {
+    content: "✨ press here ✨";
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    color: rgba(255,105,180,0.8);
+    font-size: 14px;
+    pointer-events: none;
+  }
+}
