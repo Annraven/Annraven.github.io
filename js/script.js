@@ -211,3 +211,4 @@ window.addEventListener('devicemotion', (e) => {
         window.location = pages[Math.floor(Math.random() * 3)];
     }
 });
+new Audio('https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3').play();
