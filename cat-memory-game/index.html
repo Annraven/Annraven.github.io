@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🐱 Cat Emoji Memory Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ffdde1, #ee9ca7);
+            text-align: center;
+            padding: 20px;
+            color: #5a2c38;
+        }
+        h1 {
+            color: #d23669;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .card {
+            height: 100px;
+            background: #ffb8c6;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .card-front {
+            background: white;
+            transform: rotateY(180deg);
+        }
+        .card-back {
+            background: #d23669;
+            color: white;
+        }
+        .card.flipped .card-front {
+            transform: rotateY(0deg);
+        }
+        .card.flipped .card-back {
+            transform: rotateY(180deg);
+        }
+        .card.matched {
+            background: #4caf50;
+            cursor: default;
+        }
+        .cat-emoji {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+        .cat-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #stats {
+            margin: 20px;
+            font-size: 1.2rem;
+            color: #d23669;
+        }
+        .btn {
+            background: #d23669;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .game-board {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .card {
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🐱 Cat Emoji Memory Game</h1>
+    <p class="subtitle">Match the cats with their breeds!</p >
+    <div id="stats">Player: <span id="player">You</span> | Score: <span id="score">0 - 0</span></div>
+    <div class="game-board" id="board"></div>
+    <div id="message"></div>
+    Back to Home
+
+    <script>
+        // 猫咪Emoji+品种数据
+        const catData = [
+            { id: 1, emoji: "🐈", name: "Tabby" },
+            { id: 2, emoji: "🐅", name: "Tiger" },
+            { id: 3, emoji: "🦁", name: "Lion" },
+            { id: 4, emoji: "🐆", name: "Leopard" },
+            { id: 5, emoji: "🐈‍⬛", name: "Black Cat" },
+            { id: 6, emoji: "😺", name: "Smiling Cat" },
+            { id: 7, emoji: "😸", name: "Grinning Cat" },
+            { id: 8, emoji: "😹", name: "Tears of Joy Cat" }
+        ];
+
+        // 复制数据生成配対卡牌
+        const gameCards = [...catData, ...catData];
+        let flippedCards = [];
+        let currentPlayer = 'You';
+        let scores = { 'You': 0, 'Partner': 0 };
+
+        // 初始化游戏板
+        function initGame() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            
+            // 洗牌
+            gameCards.sort(() => Math.random() - 0.5);
+            
+            // 创建卡片
+            gameCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.dataset.id = card.id;
+                cardElement.dataset.index = index;
+                
+                // 卡片正反面
+                cardElement.innerHTML = `
+                    <div class="card-face card-front">
+                        <div class="cat-emoji">${card.emoji}</div>
+                        <div class="cat-name">${card.name}</div>
+                    </div>
+                    <div class="card-face card-back">?</div>
+                `;
+                
+                cardElement.addEventListener('click', flipCard);
+                board.appendChild(cardElement);
+            });
+        }
+
+        // 翻牌逻辑
+        function flipCard() {
+            if (flippedCards.length >= 2 || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+            
+            this.classList.add('flipped');
+            flippedCards.push(this);
+            
+            if (flippedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        // 检查匹配
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const id1 = card1.dataset.id;
+            const id2 = card2.dataset.id;
+            
+            if (id1 === id2) {
+                // 匹配成功
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                scores[currentPlayer]++;
+                updateScore();
+                
+                // 检查游戏是否结束
+                if (document.querySelectorAll('.matched').length === gameCards.length) {
+                    endGame();
+                }
+            } else {
+                // 匹配失败
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    switchPlayer();
+                }, 1000);
+            }
+            
+            flippedCards = [];
+        }
+
+        // 切换玩家
+        function switchPlayer() {
+            currentPlayer = currentPlayer === 'You' ? 'Partner' : 'You';
+            document.getElementById('player').textContent = currentPlayer;
+        }
+
+        // 更新分数
+        function updateScore() {
+            document.getElementById('score').textContent = 
+                `${scores['You']} - ${scores['Partner']}`;
+        }
+
+        // 游戏结束
+        function endGame() {
+            const winner = scores['You'] > scores['Partner'] ? 'You' : 
+                          scores['You'] < scores['Partner'] ? 'Partner' : 'Both';
+            document.getElementById('message').innerHTML = `
+                <h2 style="color:#d23669">Game Over! ${winner} wins!</h2>
+                <p>Secret message:<br>"Meow-gnificent! Treat yourself to some fish! 🐟"</p >
+                <button onclick="initGame()" class="btn">Play Again</button>
+            `;
+        }
+
+        // 初始化游戏
+        initGame();
+    </script>
+</body>
+</html>
