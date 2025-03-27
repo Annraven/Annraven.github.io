@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Time-capsule | Our 100 days</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>💌 To future us</h1>
+        <div id="capsule">
+            <p>Enter password to see...</p >
+            <input type="password" id="password" placeholder="Our anniversary">
+            <button onclick="unlock()">unlock</button>
+        </div>
+        <div id="content" style="display:none;">
+            <h2>The plan for 2025.12.15.：</h2>
+            <p>Let's exchange rings！</p >
+            < img src="../images/future.jpg" width="300">
+        </div>
+    </div>
+
+    <script>
+        function unlock() {
+            if (document.getElementById('password').value === '20250328') {
+                document.getElementById('capsule').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } else {
+                alert('Wrong password, try us anniversary？');
+            }
+        }
+    </script>
+</body>
+</html>
