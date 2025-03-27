@@ -36,3 +36,13 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!-- 手机陀螺仪权限提示（仅移动端显示） -->
+<script>
+  if ('DeviceMotionEvent' in window && window.matchMedia('(hover: none)').matches) {
+    const tip = document.createElement('div');
+    tip.style = "position:fixed; bottom:0; background:#ff6b8b; color:white; padding:10px; width:100%; text-align:center;";
+    tip.innerHTML = 'shake ur phone love！';
+    document.body.appendChild(tip);
+    setTimeout(() => tip.remove(), 5000);
+  }
+</script>
