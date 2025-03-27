@@ -102,3 +102,11 @@ h1 {
     pointer-events: none;
   }
 }
+/* 页面切换动画 */
+body {
+    view-transition-name: root;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.5s;
+}
