@@ -149,3 +149,58 @@ hisCity.on('click', () => {
     hisCity.setPopupContent("<b>Surprise！</b><br>When the time we met, I'll give u a lot kisses, and we'll have a road trip, yay!❤️").openPopup();
   }
 });
+/* === 手机触控适配（不影响原有代码）=== */
+// 双指缩放触发烟花
+let scaleCount = 0;
+document.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 2) { // 双指操作
+    scaleCount++;
+    if (scaleCount === 3) {
+      // 直接调用原有烟花函数
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => {
+          const firework = document.createElement('div');
+          firework.className = 'firework';
+          firework.style.left = Math.random() * 100 + 'vw';
+          firework.style.top = Math.random() * 100 + 'vh';
+          firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+          document.body.appendChild(firework);
+          setTimeout(() => firework.remove(), 1000);
+        }, i * 30);
+      }
+      scaleCount = 0;
+    }
+  }
+}, { passive: false });
+
+// 长按触发情书（兼容原有点击计数）
+let pressTimer;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches[0].clientX < 100 && e.touches[0].clientY < 100) {
+    pressTimer = setTimeout(() => {
+      const letter = document.createElement('div');
+      letter.className = 'love-letter';
+      letter.innerHTML = `
+        <h3>To My Love in Pennsylvania:</h3>
+        <p>${messages.join('<br>')}</p >
+        <button onclick="this.parentElement.remove()">❤️ Close</button>
+      `;
+      document.body.appendChild(letter);
+    }, 1500);
+  }
+});
+document.addEventListener('touchend', () => clearTimeout(pressTimer));
+
+// 摇一摇触发测试（保留控制台触发）
+if ('DeviceMotionEvent' in window) {
+  let lastShake = 0;
+  window.addEventListener('devicemotion', (e) => {
+    const accel = e.accelerationIncludingGravity;
+    if (Math.abs(accel.x) > 15 || Math.abs(accel.y) > 15) {
+      if (Date.now() - lastShake > 3000) {
+        startQuiz(); // 直接调用原有测试函数
+        lastShake = Date.now();
+      }
+    }
+  });
+}
